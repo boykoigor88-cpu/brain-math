@@ -1558,6 +1558,22 @@
         displayProblem(currentProblem);
       }
 
+      // Auto fullscreen on first interaction anywhere on screen
+      let autoFullscreenDone = false;
+      function autoTriggerFullscreenOnFirstTouch() {
+        if (autoFullscreenDone) return;
+        autoFullscreenDone = true;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          const docEl = document.documentElement;
+          const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+          if (req) {
+            req.call(docEl).catch(() => {});
+          }
+        }
+      }
+      document.addEventListener('touchstart', autoTriggerFullscreenOnFirstTouch, { once: true, passive: true });
+      document.addEventListener('click', autoTriggerFullscreenOnFirstTouch, { once: true, passive: true });
+
       function startLiveProblemTimer() {
         if (liveTimerInterval) clearInterval(liveTimerInterval);
         liveTimerInterval = setInterval(() => {
