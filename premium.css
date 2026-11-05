@@ -315,3 +315,129 @@ body{
     padding-left:calc(9px + var(--safe-left)) !important;
   }
 }
+
+
+/* ── Mobile gameplay viewport fix / v1.1 ───────────────────────────────
+   The configuration screen is intentionally scrollable. Once a game begins,
+   we use a single screen surface rather than retaining its scroll position.
+   This keeps the entire keypad visible beneath Android/iOS browser chrome.
+   Fullscreen is manual, never triggered on a first tap or start.
+*/
+@media (max-width: 600px) {
+  html:has(body.is-playing) {
+    overflow: hidden;
+    scroll-behavior: auto;
+  }
+  body.is-playing {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100svh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-top: calc(7px + var(--safe-top)) !important;
+    padding-bottom: calc(7px + var(--safe-bottom)) !important;
+  }
+  body.is-playing > header,
+  body.is-playing > footer,
+  body.is-playing > #guest-mode-banner {
+    display: none !important;
+  }
+  body.is-playing > main {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    display: flex;
+    overflow: hidden;
+    padding: 10px !important;
+    border-radius: 20px !important;
+  }
+  body.is-playing #view-game:not(.hidden) {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(6px, 1.25dvh, 11px) !important;
+  }
+  /* Tailwind's space-y spacing and flex gap must not both apply. */
+  body.is-playing #view-game > * + * {
+    margin-top: 0 !important;
+  }
+  body.is-playing #view-game > div:first-child {
+    flex: 0 0 auto;
+    min-height: 0;
+    padding: 8px 10px !important;
+    border-radius: 15px !important;
+  }
+  body.is-playing #view-game #timer-text {
+    font-size: clamp(18px, 4.8vw, 24px) !important;
+  }
+  body.is-playing #view-game #combo-container {
+    gap: 3px !important;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+  body.is-playing #view-game #combo-text {
+    font-size: clamp(9px, 2.7vw, 12px) !important;
+    white-space: nowrap;
+  }
+  body.is-playing #view-game #game-progress-text {
+    font-size: 12px;
+  }
+  body.is-playing #view-game #problem-card {
+    flex: 1 1 auto;
+    min-height: 88px !important;
+    max-height: clamp(200px, 36dvh, 320px);
+    padding: 32px 5px 19px !important;
+    border-radius: 20px !important;
+  }
+  body.is-playing #problem-card > div:has(#math-num1) {
+    gap: clamp(4px, 1.7vw, 12px) !important;
+    font-size: clamp(22px, 7vw, 38px) !important;
+    max-width: 100%;
+  }
+  body.is-playing #problem-card #math-input {
+    padding: 0 2px !important;
+  }
+  body.is-playing #view-game > div:has(.numpad-btn) {
+    flex: 0 0 auto;
+    max-width: none;
+    min-height: 0;
+  }
+  body.is-playing #view-game .grid:has(.numpad-btn) {
+    gap: clamp(6px, 1.05dvh, 10px) !important;
+  }
+  body.is-playing #view-game .numpad-btn {
+    height: clamp(43px, 7.5dvh, 65px) !important;
+    font-size: clamp(20px, 5.4vw, 26px) !important;
+    border-radius: 14px !important;
+  }
+  body.is-playing #view-game .numpad-btn[data-key="clear"],
+  body.is-playing #view-game .numpad-btn[data-key="enter"] {
+    font-size: clamp(11px, 3.5vw, 14px) !important;
+  }
+  body.is-playing #view-game > .text-center:last-child {
+    flex: 0 0 auto;
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+  }
+}
+@media (max-width: 600px) and (max-height: 680px) {
+  body.is-playing > main { padding: 7px !important; }
+  body.is-playing #view-game:not(.hidden) { gap: 5px !important; }
+  body.is-playing #view-game #problem-card {
+    min-height: 75px !important;
+    padding: 29px 4px 12px !important;
+  }
+  body.is-playing #view-game .numpad-btn { height: clamp(39px, 7.3dvh, 53px) !important; }
+  body.is-playing #view-game > .text-center:last-child { display: none; }
+}
+@media (max-width: 600px) and (max-height: 540px) {
+  body.is-playing #view-game > div:first-child { padding: 5px 8px !important; }
+  body.is-playing #view-game #problem-card { min-height: 68px !important; }
+  body.is-playing #view-game .numpad-btn { height: 38px !important; }
+}

@@ -1457,14 +1457,10 @@
 
       function startGame(modeOverride = null) {
         if (modeOverride) selectedMode = modeOverride;
-        // Automatically hide address bar by entering fullscreen on game start
-        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-          const docEl = document.documentElement;
-          const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
-          if (req) {
-            req.call(docEl).catch(() => {});
-          }
-        }
+        // Keep fullscreen opt-in: automatic Android fullscreen triggers a system
+        // toast over the keypad and can leave the viewport scrolled offscreen.
+        document.body.classList.add('is-playing');
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 
         gameState = 'playing';
         solvedCount = 0;
@@ -1524,21 +1520,8 @@
         displayProblem(currentProblem);
       }
 
-      // Auto fullscreen on first interaction anywhere on screen
-      let autoFullscreenDone = false;
-      function autoTriggerFullscreenOnFirstTouch() {
-        if (autoFullscreenDone) return;
-        autoFullscreenDone = true;
-        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-          const docEl = document.documentElement;
-          const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
-          if (req) {
-            req.call(docEl).catch(() => {});
-          }
-        }
-      }
-      document.addEventListener('touchstart', autoTriggerFullscreenOnFirstTouch, { once: true, passive: true });
-      document.addEventListener('click', autoTriggerFullscreenOnFirstTouch, { once: true, passive: true });
+      // Fullscreen is available from the explicit ⛶ button only.
+      // Browser and PWA controls are never taken over automatically.
 
       function startLiveProblemTimer() {
         if (liveTimerInterval) clearInterval(liveTimerInterval);
@@ -2170,6 +2153,8 @@ ${lastLines}
         modalResults.classList.add('hidden');
         viewGame.classList.add('hidden');
         viewMenu.classList.remove('hidden');
+        document.body.classList.remove('is-playing');
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         gameState = 'menu';
       });
 
@@ -2184,6 +2169,8 @@ ${lastLines}
         if (liveTimerInterval) clearInterval(liveTimerInterval);
         viewGame.classList.add('hidden');
         viewMenu.classList.remove('hidden');
+        document.body.classList.remove('is-playing');
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         gameState = 'menu';
       });
 
