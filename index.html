@@ -154,6 +154,11 @@
       <button id="btn-sound" class="h-8 w-8 sm:h-auto sm:w-auto sm:px-2 sm:py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition flex items-center justify-center" title="Звук">
         <span id="sound-icon">🔊</span>
       </button>
+
+      <!-- Fullscreen Toggle Button (Hide address bar) -->
+      <button id="btn-fullscreen" class="h-8 w-8 sm:h-auto sm:w-auto sm:px-2 sm:py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition flex items-center justify-center" title="На весь экран (убрать адресную строку)">
+        <span id="fullscreen-icon">⛶</span>
+      </button>
     </div>
   </header>
 
@@ -285,6 +290,19 @@
             <input type="checkbox" id="toggle-guest-mode" class="sr-only peer">
             <div class="w-10 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
           </label>
+        </div>
+
+        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-950/60 border border-slate-800/80">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-lg">⛶</span>
+            <div>
+              <div class="text-xs font-bold text-slate-200">Полноэкранный режим</div>
+              <div class="text-[10px] text-slate-400">Скрывает адресную строку браузера во время игры</div>
+            </div>
+          </div>
+          <button type="button" id="btn-toggle-fullscreen-row" class="px-3 py-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 rounded-xl text-xs font-bold transition">
+            Включить
+          </button>
         </div>
       </div>
 
@@ -1197,6 +1215,52 @@
 
       const soundBtn = document.getElementById('btn-sound');
       const soundIcon = document.getElementById('sound-icon');
+      const fullscreenBtn = document.getElementById('btn-fullscreen');
+      const fullscreenIcon = document.getElementById('fullscreen-icon');
+      const fullscreenRowBtn = document.getElementById('btn-toggle-fullscreen-row');
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          const docEl = document.documentElement;
+          const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+          if (req) {
+            req.call(docEl).catch(() => {});
+          }
+        } else {
+          const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+          if (exit) {
+            exit.call(document).catch(() => {});
+          }
+        }
+      }
+
+      function updateFullscreenUI() {
+        const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        fullscreenIcon.textContent = isFs ? '✕' : '⛶';
+        fullscreenBtn.classList.toggle('border-indigo-500', isFs);
+        fullscreenBtn.classList.toggle('text-indigo-300', isFs);
+        if (fullscreenRowBtn) {
+          fullscreenRowBtn.textContent = isFs ? 'Выйти' : 'Включить';
+          fullscreenRowBtn.className = isFs 
+            ? 'px-3 py-1.5 bg-rose-600/30 hover:bg-rose-600/50 border border-rose-500/40 text-rose-300 rounded-xl text-xs font-bold transition'
+            : 'px-3 py-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 rounded-xl text-xs font-bold transition';
+        }
+      }
+
+      document.addEventListener('fullscreenchange', updateFullscreenUI);
+      document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
+
+      fullscreenBtn.addEventListener('click', () => {
+        sounds.tap();
+        toggleFullscreen();
+      });
+
+      if (fullscreenRowBtn) {
+        fullscreenRowBtn.addEventListener('click', () => {
+          sounds.tap();
+          toggleFullscreen();
+        });
+      }
       const toggleBreakdown = document.getElementById('toggle-instant-breakdown');
       const toggleGuest = document.getElementById('toggle-guest-mode');
       const quarantineBadge = document.getElementById('quarantine-count-badge');
@@ -1424,6 +1488,14 @@
 
       function startGame(modeOverride = null) {
         if (modeOverride) selectedMode = modeOverride;
+        // Automatically hide address bar by entering fullscreen on game start
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          const docEl = document.documentElement;
+          const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+          if (req) {
+            req.call(docEl).catch(() => {});
+          }
+        }
 
         gameState = 'playing';
         solvedCount = 0;

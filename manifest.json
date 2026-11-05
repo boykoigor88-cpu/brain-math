@@ -1,0 +1,16 @@
+{
+  "name": "Брейн Эволюция: Скоростной Счёт",
+  "short_name": "Брейн Эволюция",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
