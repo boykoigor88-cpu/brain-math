@@ -455,8 +455,8 @@
             🤖
           </div>
           <div>
-            <h3 class="text-base font-bold text-white">Дневник тренировки для ИИ</h3>
-            <p class="text-[11px] text-slate-400">Включает хронометраж каждого примера и анализ зависаний</p>
+            <h3 class="text-base font-bold text-white">Пакетное ТЗ для ИИ & Мнемоника</h3>
+            <p class="text-[11px] text-slate-400">Сформируйте задание для ChatGPT / Claude / Gemini на составление курса</p>
           </div>
         </div>
         <button id="btn-close-ai-report" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
@@ -482,10 +482,21 @@
             Если ИИ в чате составил для вас специальную подборку примеров, вставьте её сюда:
           </p>
           <input type="text" id="input-ai-custom-pack" placeholder='Пример: 48+35, 7*8, 100-37, 72/9' class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-indigo-500 mb-2">
-          <button id="btn-launch-ai-pack" class="w-full py-2 bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/40 text-purple-200 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5">
-            <span>🚀</span>
-            <span>Запустить тренировку по паку ИИ</span>
-          </button>
+          <div class="flex gap-2 mb-2">
+            <button id="btn-launch-ai-pack" class="flex-1 py-2 bg-purple-600/40 hover:bg-purple-600/60 border border-purple-500/50 text-purple-200 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5">
+              <span>🚀</span>
+              <span>Запустить курс</span>
+            </button>
+            <button id="btn-archive-quarantine-on-import" class="px-3 py-2 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition" title="Архивировать старый карантин">
+              <span>📦 Очистить карантин</span>
+            </button>
+          </div>
+          <div id="ai-mnemonics-preview" class="p-2.5 bg-slate-900 rounded-xl border border-indigo-900/40 text-[11px] text-slate-300 hidden">
+            <div class="font-bold text-amber-300 mb-1 flex items-center gap-1">
+              <span>🧠</span> Обнаружены мнемоники от ИИ:
+            </div>
+            <div id="ai-mnemonics-text" class="space-y-1 text-slate-200 italic leading-relaxed"></div>
+          </div>
         </div>
       </div>
 
@@ -498,11 +509,15 @@
       <div class="flex items-center gap-2 pt-3 mt-2 border-t border-slate-800 text-xs">
         <button id="btn-copy-ai-report" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-1.5">
           <span>📋</span>
-          <span id="copy-btn-label">Скопировать текст</span>
+          <span id="copy-btn-label">Скопировать ТЗ</span>
         </button>
-        <button id="btn-share-ai-report" class="py-2.5 px-3.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-purple-600/30 transition flex items-center justify-center gap-1.5" title="Поделиться через меню Android">
+        <button id="btn-download-ai-report" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5" title="Скачать файл ТЗ для отправки файлом">
+          <span>📄</span>
+          <span>Скачать .txt</span>
+        </button>
+        <button id="btn-share-ai-report" class="py-2.5 px-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-purple-600/30 transition flex items-center justify-center gap-1.5" title="Поделиться через меню Android">
           <span>📤</span>
-          <span>Поделиться</span>
+          <span class="hidden sm:inline">Поделиться</span>
         </button>
       </div>
     </div>
@@ -1903,12 +1918,20 @@ ${sessionTimingSection}
 [ТЕКУЩИЙ КАРАНТИН ОШИБОК И СЛАБЫХ МЕСТ (${quarantineItems.length})]:
 ${quarantineSection}
 
-[ЗАПРОС ДЛЯ ИИ-НАСТАВНИКА]:
-Пожалуйста, проведи глубокий анализ моих результатов:
-1. Оцени скорость реакции: на каких операциях и числах время решения существенно превышает среднее (зависания)? Почему там возникает затык?
-2. Свяжи ошибки и медленные ответы с конкретными механизмами устного счёта (переход через десяток, слепые зоны таблицы умножения и т.д.).
-3. Дай мне персональные лайфхаки для ускорения этих проблемных зон.
-4. Составь тренировочный пак из 10 целевых примеров в формате: "48+35, 7*8, 100-37...", чтобы я загрузил его в игру и прокачал скорость!
+==============================================
+📋 ТЕХНИЧЕСКОЕ ЗАДАНИЕ ДЛЯ НЕЙРОСЕТИ (AI BRIEF)
+Роль: Элитный методист по ментальной арифметике и спортивной мнемотехнике.
+Цель: Проанализировать накопленный массив сессий и ошибок, разработать стратегию ликвидации задержек и создать целевую программу тренировок с мнемоническими сюжетами.
+
+[ОБЯЗАТЕЛЬНЫЙ ФОРМАТ ОТВЕТА НЕЙРОСЕТИ]:
+1. КОГНИТИВНЫЙ ДИАГНОЗ:
+   • 3-4 ключевых вывода о причинах задержек (разрядные барьеры, слепые зоны таблицы умножения, стресс времени).
+
+2. БЛОК МНЕМОНИКИ (ОБРАЗЫ И МИНИ-ИСТОРИИ):
+   • Для каждого проблемного примера (например 7×8, 6×7, 8×9 или вычитания через десяток) придумай яркий образ или смешную абсурдную мнемоническую мини-историю / рифму, чтобы результат врезался в память без перебора в уме!
+
+3. ПЕРСОНАЛЬНЫЙ ТРЕНИРОВОЧНЫЙ КУРС (в одну строчку для загрузки в игру):
+   [КУРС]: пример1, пример2, пример3, пример4... (15-20 целевых примеров строго в формате: 7*8, 6*7, 48+35, 100-37)
 ==============================================`;
 
         return report;
@@ -1988,15 +2011,56 @@ ${quarantineSection}
         }
       });
 
+      // Download AI Brief as a clean .txt file
+      function downloadAiBriefFile() {
+        const text = aiReportTextarea.value;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `brain_math_brief_${new Date().toISOString().slice(0, 10)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      document.getElementById('btn-download-ai-report').addEventListener('click', () => {
+        sounds.tap();
+        downloadAiBriefFile();
+      });
+
+      // Archive quarantine button
+      document.getElementById('btn-archive-quarantine-on-import').addEventListener('click', () => {
+        sounds.tap();
+        quarantine.clear();
+        renderQuarantineModal();
+        const btn = document.getElementById('btn-archive-quarantine-on-import');
+        btn.textContent = '✓ Карантин очищен';
+        setTimeout(() => { btn.textContent = '📦 Очистить карантин'; }, 2000);
+      });
+
+      // Smart Parser for AI response (extracts mnemonics & problem packs)
       document.getElementById('btn-launch-ai-pack').addEventListener('click', () => {
         const inputVal = document.getElementById('input-ai-custom-pack').value.trim();
         if (!inputVal) return;
 
-        const parts = inputVal.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+        // Check if there are mnemonics mentioned in the input
+        const mnemonicPreview = document.getElementById('ai-mnemonics-preview');
+        const mnemonicTextEl = document.getElementById('ai-mnemonics-text');
+        const lines = inputVal.split('\n');
+        const foundMnemonics = lines.filter(l => l.match(/(мнемо|образ|сюжет|истори|рифм|запомн)/i) && l.length > 15);
+        if (foundMnemonics.length > 0) {
+          mnemonicTextEl.innerHTML = foundMnemonics.slice(0, 4).map(m => `<div>• ${m.replace(/^[-*•]\s*/, '')}</div>`).join('');
+          mnemonicPreview.classList.remove('hidden');
+        }
+
+        // Global regex search for all math patterns in the text
+        const mathMatches = inputVal.match(/\b\d+\s*[\+\-\*\/×÷−]\s*\d+\b/g) || [];
         const parsedQueue = [];
 
-        parts.forEach(str => {
-          const match = str.match(/^(\d+)\s*([\+\-\*\/×÷−])\s*(\d+)$/);
+        mathMatches.forEach(expr => {
+          const match = expr.match(/^(\d+)\s*([\+\-\*\/×÷−])\s*(\d+)$/);
           if (match) {
             const n1 = parseInt(match[1], 10);
             let rawOp = match[2];
