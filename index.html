@@ -102,6 +102,7 @@
     }
   </style>
   <link rel="stylesheet" href="premium.css">
+  <script src="adaptive.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-between p-2 sm:p-4 no-select select-none antialiased">
 
@@ -138,10 +139,10 @@
         <span class="hidden md:inline">Отчёт</span>
       </button>
 
-      <!-- Quarantine Button with Badge -->
-      <button id="btn-quarantine" class="h-8 px-1.5 sm:h-auto sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition flex items-center justify-center gap-1 text-xs font-semibold relative" title="Карантин ошибок">
-        <span>🛡️</span>
-        <span id="quarantine-count-badge" class="px-1 py-0.2 rounded-full text-[9px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+      <!-- Mathematical skills: compact status button -->
+      <button id="btn-skills" class="h-8 px-1.5 sm:h-auto sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition flex items-center justify-center gap-1 text-xs font-semibold relative" title="Карта математических навыков">
+        <span>🧠</span>
+        <span id="skills-count-badge" class="px-1 py-0.2 rounded-full text-[9px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
           0
         </span>
       </button>
@@ -167,7 +168,7 @@
   <div id="guest-mode-banner" class="w-full max-w-xl mb-2.5 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs font-semibold flex items-center justify-between hidden">
     <div class="flex items-center gap-2">
       <span class="text-base">🎭</span>
-      <span><strong>Гостевой режим:</strong> личные рекорды и карантин защищены от изменений</span>
+      <span><strong>Гостевой режим:</strong> рекорды и карта навыков не изменятся</span>
     </div>
     <button id="btn-exit-guest" class="px-2 py-0.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-[11px] font-bold border border-amber-500/50 transition">
       Вернуть профиль
@@ -195,8 +196,8 @@
             <path d="M24 30 19 25" stroke="#7fdbff" stroke-width="4" stroke-linecap="round"/>
           </svg>
         </div>
-        <div class="hero-copy"><strong class="hero-title">Глубокий анализ времени</strong>
-          Игра измеряет скорость каждого ответа в миллисекундах, вычисляет средний темп и находит <span class="text-amber-300 font-bold">«зависания»</span> — примеры, где вы думали значительно дольше нормы.
+        <div class="hero-copy"><strong class="hero-title">Умная тренировка мозга</strong>
+          В режиме «Обучение» игра выявляет <span class="text-amber-300 font-bold">математические закономерности</span>, на которых возникают трудности, и незаметно добавляет новые упражнения на эти навыки. Рекордные режимы остаются без адаптации.
         </div>
       </div>
 
@@ -259,7 +260,7 @@
             <span class="text-base mb-1">🎓</span>
             <div class="mode-copy">
               <div class="font-bold text-white">Обучение</div>
-              <div class="text-[10px] text-slate-300 mt-0.5">Разбор + тайминг</div>
+              <div class="text-[10px] text-slate-300 mt-0.5">Адаптивный подбор</div>
             </div>
           </button>
           <button data-mode="sprint" class="mode-btn p-2.5 rounded-2xl border font-semibold text-xs transition flex flex-col items-center text-center bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white">
@@ -307,7 +308,7 @@
             <span class="text-lg">🎭</span>
             <div>
               <div class="text-xs font-bold text-slate-200">Гостевой режим («Дать поиграть другу»)</div>
-              <div class="text-[10px] text-slate-400">Ошибки не загрязняют ваш карантин и не портят рекорды</div>
+              <div class="text-[10px] text-slate-400">Ответы гостя не меняют вашу статистику навыков и рекорды</div>
             </div>
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
@@ -330,17 +331,11 @@
         </div>
       </div>
 
-      <!-- Start Button & Quarantine Action -->
+      <!-- Start: adaptive learning runs automatically in regular training -->
       <div class="start-actions pt-1 flex gap-2">
         <button id="btn-start-game" class="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-black text-sm sm:text-base tracking-wider uppercase shadow-xl shadow-indigo-600/30 active:scale-[0.98] transition flex items-center justify-center space-x-2">
           <span>🚀</span>
           <span>Начать сессию</span>
-        </button>
-
-        <button id="btn-train-quarantine-quick" class="px-4 py-3.5 rounded-2xl bg-rose-950/40 hover:bg-rose-900/50 border border-rose-900/60 text-rose-300 font-bold text-xs transition flex items-center justify-center space-x-1.5" title="Отработать карантин">
-          <span>🛡️</span>
-          <span class="hidden sm:inline">Тренировать</span>
-          <span>карантин</span>
         </button>
       </div>
     </div>
@@ -400,9 +395,6 @@
         </div>
 
         <!-- Mode Indicator / Note -->
-        <div id="quarantine-training-tag" class="absolute top-3 right-4 text-[10px] font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/30 hidden">
-          🛡️ ИЗ КАРАНТИНА
-        </div>
         <div id="custom-ai-pack-tag" class="absolute top-3 right-4 text-[10px] font-bold text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/30 hidden">
           🤖 ПАК ОТ ИИ
         </div>
@@ -465,7 +457,7 @@
 
   <!-- Footer -->
   <footer class="mt-2 text-center text-[11px] text-slate-500 pb-2">
-    Брейн Эволюция • Лаборатория ментального счёта с хронометражем и ИИ-анализом
+    Брейн Эволюция • Адаптивная ментальная арифметика
   </footer>
 
   <!-- MODAL: AI COACH & REPORT GENERATOR -->
@@ -479,8 +471,8 @@
             🤖
           </div>
           <div>
-            <h3 class="text-base font-bold text-white">Пакетное ТЗ для ИИ & Мнемоника</h3>
-            <p class="text-[11px] text-slate-400">Сформируйте задание для ChatGPT / Claude / Gemini на составление курса</p>
+            <h3 class="text-base font-bold text-white">Отчёт для ИИ-наставника</h3>
+            <p class="text-[11px] text-slate-400">Экспортируйте карту навыков и результаты для дополнительных советов</p>
           </div>
         </div>
         <button id="btn-close-ai-report" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
@@ -511,9 +503,7 @@
               <span>🚀</span>
               <span>Запустить курс</span>
             </button>
-            <button id="btn-archive-quarantine-on-import" class="px-3 py-2 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition" title="Архивировать старый карантин">
-              <span>📦 Очистить карантин</span>
-            </button>
+
           </div>
           <div id="ai-mnemonics-preview" class="p-2.5 bg-slate-900 rounded-xl border border-indigo-900/40 text-[11px] text-slate-300 hidden">
             <div class="font-bold text-amber-300 mb-1 flex items-center gap-1">
@@ -557,8 +547,8 @@
           <span class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-sm">✕</span>
           <h3 class="text-base font-bold text-white">Разбор ошибки</h3>
         </div>
-        <span id="breakdown-quarantine-status" class="text-[11px] font-semibold text-rose-400 bg-rose-950/50 px-2 py-0.5 rounded-full border border-rose-900/60">
-          🛡️ Добавлено в карантин
+        <span id="breakdown-skill-status" class="text-[11px] font-semibold text-rose-400 bg-rose-950/50 px-2 py-0.5 rounded-full border border-rose-900/60">
+          🧠 Навык анализируется
         </span>
       </div>
 
@@ -607,46 +597,25 @@
     </div>
   </div>
 
-  <!-- MODAL: QUARANTINE MANAGER -->
-  <div id="modal-quarantine" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+  <!-- MODAL: SKILL MAP — no drills of exact old problems -->
+  <div id="modal-skills" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-3xl p-5 sm:p-6 max-w-lg w-full shadow-2xl max-h-[90vh] flex flex-col">
-      
-      <!-- Header -->
       <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-        <div class="flex items-center space-x-2">
-          <span class="text-xl">🛡️</span>
-          <div>
-            <h3 class="text-base font-bold text-white">Карантин ошибок & Зависаний</h3>
-            <p class="text-[11px] text-slate-400">Слабые места и затяжные решения для тренировки скорости</p>
-          </div>
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">🧠</span>
+          <div><h3 class="text-base font-bold text-white">Карта навыков</h3>
+          <p class="text-[11px] text-slate-400">Здесь не ошибки, а математические закономерности</p></div>
         </div>
-        <button id="btn-close-quarantine" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
+        <button id="btn-close-skills" class="text-slate-400 hover:text-white p-1 rounded-lg" aria-label="Закрыть">✕</button>
       </div>
-
-      <!-- Action Top Bar -->
-      <div class="flex items-center justify-between gap-2 mb-3">
-        <div class="text-xs font-semibold text-slate-300">
-          В карантине: <span id="quarantine-modal-count" class="font-bold text-rose-400">0 примеров</span>
-        </div>
-        <button id="btn-train-quarantine" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/30 transition flex items-center gap-1.5">
-          <span>⚡</span>
-          <span>Отработать карантин</span>
-        </button>
+      <div class="flex items-center justify-between gap-2 mb-3 text-xs text-slate-400">
+        <span>Текущая сложность: <strong id="skills-level" class="text-indigo-300">Средний</strong></span>
+        <span id="skills-samples" class="font-medium">0 наблюдений</span>
       </div>
-
-      <!-- Quarantine List View -->
-      <div id="quarantine-list" class="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[50vh] text-xs">
-        <!-- Rendered dynamically -->
-      </div>
-
-      <!-- Footer Actions -->
-      <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-800 text-xs">
-        <button id="btn-clear-quarantine" class="text-rose-400 hover:text-rose-300 py-1 px-2 rounded hover:bg-rose-950/30 transition">
-          Очистить весь карантин
-        </button>
-        <button id="btn-done-quarantine" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold transition">
-          Закрыть
-        </button>
+      <div id="skills-list" class="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[55vh] text-xs"></div>
+      <p class="text-[11px] text-slate-500 leading-relaxed mt-3">Игра делает выводы по нескольким разным примерам и сессиям. В «Обучении» она добавляет новые задачи на подтверждённые слабые навыки, не повторяя один и тот же пример по кругу.</p>
+      <div class="flex justify-end pt-3 mt-3 border-t border-slate-800">
+        <button id="btn-done-skills" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Закрыть</button>
       </div>
     </div>
   </div>
@@ -712,11 +681,10 @@
           </div>
         </div>
 
-        <!-- Button to send slow problems to quarantine if available -->
-        <button id="btn-add-slow-to-quarantine" class="w-full py-2 bg-rose-950/30 hover:bg-rose-950/50 border border-rose-900/40 text-rose-300 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition">
-          <span>🛡️</span>
-          <span>Отправить зависшие примеры в Карантин</span>
-        </button>
+        <!-- Skill insight, built from repeated observations rather than one slow answer -->
+        <div id="res-skill-insight" class="bg-indigo-950/40 border border-indigo-800/40 rounded-2xl p-3 text-xs leading-relaxed text-slate-300" aria-live="polite">
+          🧠 После нескольких тренировок здесь появятся закономерности и короткие математические приёмы.
+        </div>
       </div>
 
       <!-- Quick AI report trigger on results screen -->
@@ -834,10 +802,14 @@
                 text: `Сначала десятки: ${tens1} + ${tens2} = ${tens1 + tens2}. Затем единицы: ${ones1} + ${ones2} = ${ones1 + ones2}. Итого: ${tens1 + tens2} + ${ones1 + ones2} = ${ans}.`
               };
             }
-            return {
-              title: 'Переход через десяток:',
-              text: `Дополните ${n1} до 10 (нужно ${10 - n1}). Возьмите эту часть из ${n2}: 10 + ${n2 - (10 - n1)} = ${ans}.`
-            };
+            if (n1 + n2 >= 10 && n1 < 10 && n2 < 10) {
+              const gap = 10 - n1;
+              return {
+                title: 'Переход через десяток:',
+                text: `Дополните ${n1} до 10: возьмите ${gap} из ${n2}. Получится 10 + ${n2 - gap} = ${ans}.`
+              };
+            }
+            return { title: 'Простое сложение:', text: `Сложите ${n1} и ${n2}: ${n1} + ${n2} = ${ans}.` };
           }
 
           if (opSymbol === '−') {
@@ -1025,90 +997,6 @@
       // --- PROFILE STATE (Main vs Guest) ---
       let isGuestMode = false;
 
-      // --- QUARANTINE MANAGER ---
-      class QuarantineManager {
-        constructor() {
-          this.items = this.load();
-        }
-
-        load() {
-          try {
-            const raw = localStorage.getItem('brainmath_quarantine');
-            return raw ? JSON.parse(raw) : [];
-          } catch (e) {
-            return [];
-          }
-        }
-
-        save() {
-          try {
-            localStorage.setItem('brainmath_quarantine', JSON.stringify(this.items));
-          } catch (e) {}
-          updateQuarantineBadge();
-        }
-
-        add(prob, userAns, timeSec = null, reason = 'ошибка') {
-          if (isGuestMode) return;
-
-          const id = `${prob.n1}_${prob.symbol}_${prob.n2}`;
-          const existing = this.items.find(item => item.id === id);
-          const trick = MathHeuristics.getTrick(prob.n1, prob.symbol, prob.n2, prob.answer);
-
-          if (!existing) {
-            this.items.unshift({
-              id,
-              n1: prob.n1,
-              symbol: prob.symbol,
-              n2: prob.n2,
-              answer: prob.answer,
-              lastUserAns: userAns,
-              mistakeCount: 1,
-              correctStreak: 0,
-              lastTimeSec: timeSec,
-              reason: reason,
-              date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }),
-              trickTitle: trick.title,
-              trickText: trick.text
-            });
-          } else {
-            existing.mistakeCount++;
-            existing.lastUserAns = userAns;
-            existing.correctStreak = 0;
-            if (timeSec) existing.lastTimeSec = timeSec;
-          }
-
-          if (this.items.length > 50) this.items.pop();
-          this.save();
-        }
-
-        resolveSuccess(id) {
-          if (isGuestMode) return false;
-          const item = this.items.find(i => i.id === id);
-          if (item) {
-            item.correctStreak++;
-            if (item.correctStreak >= 2) {
-              this.items = this.items.filter(i => i.id !== id);
-              this.save();
-              return true;
-            }
-            this.save();
-          }
-          return false;
-        }
-
-        remove(id) {
-          this.items = this.items.filter(i => i.id !== id);
-          this.save();
-        }
-
-        clear() {
-          this.items = [];
-          this.save();
-        }
-      }
-
-      const quarantine = new QuarantineManager();
-
       // --- RECORDS & STATS ---
       class RecordsManager {
         constructor() {
@@ -1192,6 +1080,11 @@
       }
 
       const records = new RecordsManager();
+      const adaptive = new BrainAdaptive(window.localStorage);
+      let recentProblemKeys = [];
+      let currentSessionLearningSlot = 0;
+      let currentSessionId = '';
+      let firstAttemptRecorded = false;
 
       // --- CONFIG & STATE ---
       let selectedOps = ['add', 'sub', 'mul', 'div'];
@@ -1229,7 +1122,7 @@
       const modalResults = document.getElementById('modal-results');
       const modalRecords = document.getElementById('modal-records');
       const modalBreakdown = document.getElementById('modal-breakdown');
-      const modalQuarantine = document.getElementById('modal-quarantine');
+      const modalSkills = document.getElementById('modal-skills');
       const modalAiReport = document.getElementById('modal-ai-report');
 
       const mathNum1 = document.getElementById('math-num1');
@@ -1238,7 +1131,6 @@
       const mathInput = document.getElementById('math-input');
       const problemCard = document.getElementById('problem-card');
       const feedbackIcon = document.getElementById('feedback-icon');
-      const quarantineTrainingTag = document.getElementById('quarantine-training-tag');
       const customAiPackTag = document.getElementById('custom-ai-pack-tag');
       const gameplayGuestTag = document.getElementById('gameplay-guest-tag');
       const liveProblemTimer = document.getElementById('live-problem-timer');
@@ -1302,7 +1194,7 @@
       }
       const toggleBreakdown = document.getElementById('toggle-instant-breakdown');
       const toggleGuest = document.getElementById('toggle-guest-mode');
-      const quarantineBadge = document.getElementById('quarantine-count-badge');
+      const skillsBadge = document.getElementById('skills-count-badge');
       const aiReportTextarea = document.getElementById('ai-report-text');
 
       const profileBtn = document.getElementById('btn-toggle-profile');
@@ -1324,11 +1216,10 @@
       function decorateModeButton(btn) {
         const mode = btn.getAttribute('data-mode');
         const labels = {
-          learn: ['🎓','Обучение','Разбор + тайминг','text-white','text-slate-300'],
+          learn: ['🎓','Обучение','Адаптивный подбор','text-white','text-slate-300'],
           sprint: ['⚡','Спринт (20)','На рекорд скорости','text-slate-200','text-slate-400'],
           time: ['⏳','Тайм-атака','60 секунд','text-slate-200','text-slate-400'],
           survival: ['🔥','Выживание','+2.5с за верный ход','text-slate-200','text-slate-400'],
-          quarantine_train: ['🧪','Карантин','Отработка ошибок','text-slate-200','text-slate-400'],
           ai_pack: ['🤖','Пак от ИИ','Своя подборка примеров','text-slate-200','text-slate-400']
         };
         const [icon,title,sub,titleCls,subCls] = labels[mode] || ['❔', mode, '', 'text-slate-200', 'text-slate-400'];
@@ -1346,16 +1237,14 @@
         updateSoundUI();
       });
 
-      function updateQuarantineBadge() {
-        const count = quarantine.items.length;
-        quarantineBadge.textContent = count;
-        if (count > 0) {
-          quarantineBadge.className = 'px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-rose-500 text-white shadow-sm';
-        } else {
-          quarantineBadge.className = 'px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700';
-        }
+      function updateSkillsBadge() {
+        const count = adaptive.focus(selectedDiff, selectedOps).length;
+        skillsBadge.textContent = count;
+        skillsBadge.className = count
+          ? 'px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40'
+          : 'px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700';
       }
-      updateQuarantineBadge();
+      updateSkillsBadge();
 
       // --- GUEST MODE TOGGLING ---
       function setGuestMode(active) {
@@ -1418,6 +1307,7 @@
               ? 'op-btn is-selected py-2.5 rounded-2xl border font-bold text-sm transition flex flex-col items-center gap-0.5 bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-600/30'
               : 'op-btn py-2.5 rounded-2xl border font-bold text-sm transition flex flex-col items-center gap-0.5 bg-slate-800/80 border-slate-700 text-slate-400 hover:text-white';
           });
+          updateSkillsBadge();
         });
       });
 
@@ -1432,6 +1322,7 @@
               ? 'diff-btn is-selected py-2 px-3 rounded-2xl border font-semibold text-xs transition text-center bg-indigo-600/30 border-indigo-500 text-white shadow-md shadow-indigo-600/20'
               : 'diff-btn py-2 px-3 rounded-2xl border font-semibold text-xs transition text-center bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white';
           });
+          updateSkillsBadge();
         });
       });
 
@@ -1456,7 +1347,7 @@
       }
 
       function generateProblem() {
-        if ((selectedMode === 'quarantine_train' || selectedMode === 'ai_pack') && customQueue.length > 0) {
+        if (selectedMode === 'ai_pack' && customQueue.length > 0) {
           const item = customQueue[currentCustomIndex % customQueue.length];
           return {
             id: item.id || `${item.n1}_${item.symbol}_${item.n2}`,
@@ -1464,12 +1355,19 @@
             symbol: item.symbol,
             n2: item.n2,
             answer: item.answer,
-            isFromQuarantine: selectedMode === 'quarantine_train',
             isFromAiPack: selectedMode === 'ai_pack'
           };
         }
 
-        const op = selectedOps[Math.floor(Math.random() * selectedOps.length)];
+        if (selectedMode === 'learn' && !isGuestMode) {
+          return adaptive.chooseLearningProblem(generateRandomProblem, selectedDiff, selectedOps, recentProblemKeys, currentSessionLearningSlot++);
+        }
+        return generateRandomProblem();
+      }
+
+      function generateRandomProblem(forcedOp = null) {
+        const op = forcedOp && selectedOps.includes(forcedOp)
+          ? forcedOp : selectedOps[Math.floor(Math.random() * selectedOps.length)];
         let n1, n2, ans, symbol;
 
         if (op === 'add') {
@@ -1529,7 +1427,7 @@
           ans = quotient;
         }
 
-        return { n1, n2, symbol, answer: ans, isFromQuarantine: false, isFromAiPack: false };
+        return { n1, n2, symbol, answer: ans, isFromAiPack: false };
       }
 
       function displayProblem(prob) {
@@ -1541,7 +1439,11 @@
         mathInput.classList.remove('text-emerald-400', 'text-rose-400');
         mathInput.classList.add('text-amber-400');
 
-        quarantineTrainingTag.classList.toggle('hidden', !prob.isFromQuarantine);
+        firstAttemptRecorded = false;
+        if (selectedMode === 'learn' && !isGuestMode) {
+          recentProblemKeys.push(BrainAdaptive.keyOf(prob));
+          if (recentProblemKeys.length > 40) recentProblemKeys.shift();
+        }
         customAiPackTag.classList.toggle('hidden', !prob.isFromAiPack);
         gameplayGuestTag.classList.toggle('hidden', !isGuestMode);
 
@@ -1573,6 +1475,9 @@
         userInput = '';
         currentCustomIndex = 0;
         currentSessionProblems = []; // clear session telemetry
+        recentProblemKeys = [];
+        currentSessionLearningSlot = 0;
+        currentSessionId = `${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
         viewMenu.classList.add('hidden');
         viewGame.classList.remove('hidden');
@@ -1582,12 +1487,6 @@
         if (selectedMode === 'learn') {
           totalProblemsTarget = 15;
           gameModeBadge.textContent = 'Обучение (15)';
-          timerLabel.textContent = 'Время';
-          updateProgressUI();
-        } else if (selectedMode === 'quarantine_train') {
-          customQueue = [...quarantine.items];
-          totalProblemsTarget = customQueue.length || 1;
-          gameModeBadge.textContent = 'Отработка карантина';
           timerLabel.textContent = 'Время';
           updateProgressUI();
         } else if (selectedMode === 'ai_pack') {
@@ -1664,7 +1563,7 @@
         timerInterval = setInterval(() => {
           if (gameState !== 'playing') return;
 
-          if (selectedMode === 'sprint' || selectedMode === 'learn' || selectedMode === 'quarantine_train' || selectedMode === 'ai_pack') {
+          if (selectedMode === 'sprint' || selectedMode === 'learn' || selectedMode === 'ai_pack') {
             const elapsedMs = performance.now() - startTime;
             timerText.textContent = formatMs(elapsedMs);
           } else {
@@ -1692,7 +1591,7 @@
       }
 
       function updateProgressUI() {
-        if (selectedMode === 'sprint' || selectedMode === 'learn' || selectedMode === 'quarantine_train' || selectedMode === 'ai_pack') {
+        if (selectedMode === 'sprint' || selectedMode === 'learn' || selectedMode === 'ai_pack') {
           gameProgressText.textContent = `Пример ${Math.min(totalProblemsTarget, solvedCount + 1)} / ${totalProblemsTarget}`;
           const pct = (solvedCount / totalProblemsTarget) * 100;
           gameProgressBar.style.width = `${pct}%`;
@@ -1766,6 +1665,15 @@
         const timeTakenSec = (timeTakenMs / 1000).toFixed(1);
         const isCorrect = val === currentProblem.answer;
 
+        // Record only the first attempt at each displayed problem for skill estimation.
+        // Retrying after a hint does not count as independent evidence.
+        if (!firstAttemptRecorded) {
+          firstAttemptRecorded = true;
+          if (!isGuestMode && ['learn', 'sprint', 'time', 'survival'].includes(selectedMode)) {
+            adaptive.observe(currentProblem, isCorrect, timeTakenMs, selectedDiff, currentSessionId);
+          }
+        }
+
         // Record problem telemetry
         currentSessionProblems.push({
           n1: currentProblem.n1,
@@ -1797,15 +1705,7 @@
             timeLeft = Math.min(30, timeLeft + 2.5);
           }
 
-          if (currentProblem.isFromQuarantine && currentProblem.id) {
-            const mastered = quarantine.resolveSuccess(currentProblem.id);
-            if (mastered) {
-              showFeedback(`🌟 Усвоено! (${timeTakenSec}с)`, true);
-            } else {
-              showFeedback(`✓ Верно! (${timeTakenSec}с)`, true);
-            }
-            currentCustomIndex++;
-          } else if (currentProblem.isFromAiPack) {
+          if (currentProblem.isFromAiPack) {
             showFeedback(`✓ Отлично! (${timeTakenSec}с)`, true);
             currentCustomIndex++;
           } else {
@@ -1819,7 +1719,7 @@
           updateComboUI();
           updateProgressUI();
 
-          if ((selectedMode === 'sprint' || selectedMode === 'learn' || selectedMode === 'quarantine_train' || selectedMode === 'ai_pack') && solvedCount >= totalProblemsTarget) {
+          if ((selectedMode === 'sprint' || selectedMode === 'learn' || selectedMode === 'ai_pack') && solvedCount >= totalProblemsTarget) {
             endGame();
             return;
           }
@@ -1829,7 +1729,6 @@
           currentCombo = 0;
           sounds.wrong();
 
-          quarantine.add(currentProblem, val, timeTakenSec, 'ошибка');
 
           if (selectedMode === 'survival') {
             timeLeft = Math.max(1, timeLeft - 4);
@@ -1861,14 +1760,9 @@
         document.getElementById('breakdown-correct-ans').textContent = prob.answer;
         document.getElementById('breakdown-time-spent').textContent = timeSec ? `${timeSec}с` : '—';
 
-        const quarantineStatusEl = document.getElementById('breakdown-quarantine-status');
-        if (isGuestMode) {
-          quarantineStatusEl.textContent = '🎭 Гостевой режим (карантин не затронут)';
-          quarantineStatusEl.className = 'text-[11px] font-semibold text-amber-300 bg-amber-950/50 px-2 py-0.5 rounded-full border border-amber-900/60';
-        } else {
-          quarantineStatusEl.textContent = '🛡️ Добавлено в карантин';
-          quarantineStatusEl.className = 'text-[11px] font-semibold text-rose-400 bg-rose-950/50 px-2 py-0.5 rounded-full border border-rose-900/60';
-        }
+        const statusEl = document.getElementById('breakdown-skill-status');
+        statusEl.textContent = isGuestMode ? '🎭 Гость — без записи' : '🧠 Навык учтён в анализе';
+        statusEl.className = 'text-[11px] font-semibold text-indigo-300 bg-indigo-950/50 px-2 py-0.5 rounded-full border border-indigo-800/60';
 
         const trick = MathHeuristics.getTrick(prob.n1, prob.symbol, prob.n2, prob.answer);
         document.getElementById('breakdown-trick-title').textContent = trick.title;
@@ -1893,100 +1787,30 @@
 
       // --- AI COACH & REPORT GENERATION ---
       function generateAiReport() {
-        const totalSolved = records.data.totalSolved || 0;
-        const totalMistakes = records.data.totalMistakes || 0;
-        const totalPlays = totalSolved + totalMistakes;
-        const overallAcc = totalPlays > 0 ? Math.round((totalSolved / totalPlays) * 100) : 100;
-        const quarantineItems = quarantine.items;
+        const d = records.data;
+        const played = (d.totalSolved || 0) + (d.totalMistakes || 0);
+        const accuracy = played ? Math.round((d.totalSolved || 0) / played * 100) : 0;
+        const summary = adaptive.getReport(selectedDiff, selectedOps);
+        const diffName = { easy: 'Лёгкий', medium: 'Средний', hard: 'Сложный' }[selectedDiff];
+        const skillLines = summary.studied.length ? summary.studied.map(x =>
+          `• ${x.name}: ${x.count} наблюдений, точность ${x.accuracy}%, ${x.medianSec === null ? 'время неизвестно' : 'медиана ' + x.medianSec.toFixed(1) + 'с'}; ${x.needsWork ? 'подтверждённая зона тренировки' : x.reliable ? 'явная проблема не подтверждена' : 'данных пока мало'}`
+        ).join('\n') : 'Пока нет наблюдений на выбранной сложности.';
+        const last = currentSessionProblems.slice(-25);
+        const lastLines = last.length ? last.map(p =>
+          `• ${p.n1}${p.symbol}${p.n2}=${p.answer}: ${p.isCorrect ? 'верно' : 'ошибка ' + p.userAns}, ${p.timeSec}с; признаки: ${BrainAdaptive.classify(p).map(id => BrainAdaptive.SKILLS[id].name).join(', ') || 'общая практика'}`
+        ).join('\n') : 'Последняя сессия отсутствует.';
+        return `🧠 БРЕЙН ЭВОЛЮЦИЯ — ДНЕВНИК МАТЕМАТИЧЕСКИХ НАВЫКОВ
+Всего правильных ответов: ${d.totalSolved || 0}; точность: ${accuracy}%; сессий: ${d.sessionsCount || 0}.
+Сложность: ${diffName}. Включённые действия: ${selectedOps.map(op => ({add:'+',sub:'−',mul:'×',div:'÷'})[op]).join(' ')}.
 
-        let sprintEasy = records.data.sprint.easy ? formatMs(records.data.sprint.easy) : 'нет данных';
-        let sprintMed = records.data.sprint.medium ? formatMs(records.data.sprint.medium) : 'нет данных';
-        let sprintHard = records.data.sprint.hard ? formatMs(records.data.sprint.hard) : 'нет данных';
+КАРТА НАВЫКОВ (${summary.total} наблюдений):
+${skillLines}
 
-        // Calculate session latency metrics
-        let sessionTimingSection = '';
-        if (currentSessionProblems.length > 0) {
-          const totalMs = currentSessionProblems.reduce((sum, p) => sum + p.timeMs, 0);
-          const avgSec = (totalMs / currentSessionProblems.length / 1000).toFixed(1);
+ПОСЛЕДНИЕ ОТВЕТЫ:
+${lastLines}
 
-          // By operation
-          const opsMap = {};
-          currentSessionProblems.forEach(p => {
-            if (!opsMap[p.symbol]) opsMap[p.symbol] = [];
-            opsMap[p.symbol].push(p.timeMs);
-          });
-
-          const opsLines = Object.keys(opsMap).map(sym => {
-            const list = opsMap[sym];
-            const opAvg = (list.reduce((a, b) => a + b, 0) / list.length / 1000).toFixed(1);
-            let opName = 'Сложение (+)';
-            if (sym === '−') opName = 'Вычитание (−)';
-            if (sym === '×') opName = 'Умножение (×)';
-            if (sym === '÷') opName = 'Деление (÷)';
-            return `  • ${opName}: ${opAvg} сек (решено ${list.length})`;
-          }).join('\n');
-
-          // Slowest problems (top 4)
-          const sortedSlow = [...currentSessionProblems].sort((a, b) => b.timeMs - a.timeMs).slice(0, 4);
-          const slowLines = sortedSlow.map((p, idx) => 
-            `  ${idx + 1}. ${p.n1} ${p.symbol} ${p.n2} = ${p.answer} → ${p.timeSec} сек ${p.isCorrect ? '(решено верно, но с задержкой)' : '(ошибка: ' + p.userAns + ')'}`
-          ).join('\n');
-
-          sessionTimingSection = `[ДЕТАЛЬНЫЙ ХРОНОМЕТРАЖ И АНАЛИЗ ЗАВИСАНИЙ ПОСЛЕДНЕЙ СЕССИИ]:
-• Среднее время на решение 1 примера: ${avgSec} сек
-• Распределение скорости по операциям:
-${opsLines}
-
-• ТОП-4 САМЫХ МЕДЛЕННЫХ ПРИМЕРА (когнитивные затыки / время выше среднего):
-${slowLines}`;
-        } else {
-          sessionTimingSection = '[ХРОНОМЕТРАЖ]: Сыграйте сессию, чтобы получить детальную разбивку времени по каждому примеру.';
-        }
-
-        let quarantineSection = '';
-        if (quarantineItems.length === 0) {
-          quarantineSection = 'Ошибок в карантине нет (все примеры усвоены или решены без сбоев).';
-        } else {
-          quarantineSection = quarantineItems.map((item, idx) => 
-            `${idx + 1}. ${item.n1} ${item.symbol} ${item.n2} = ${item.answer} (был ответ: ${item.lastUserAns}, повторов: ${item.mistakeCount}${item.lastTimeSec ? ', время: ' + item.lastTimeSec + 'с' : ''})`
-          ).join('\n');
-        }
-
-        const report = `=== 🧠 ДНЕВНИК ТРЕНИРОВКИ "БРЕЙН ЭВОЛЮЦИЯ" ===
-[ОБЩАЯ СТАТИСТИКА]:
-• Всего решено примеров: ${totalSolved}
-• Процент точности: ${overallAcc}%
-• Максимальная комбо-серия: x${records.data.maxCombo || 0}
-• Завершённых сессий: ${records.data.sessionsCount || 0}
-
-[РЕКОРДЫ В СПРИНТЕ (20)]:
-• Лёгкий (до 20): ${sprintEasy}
-• Средний (до 100): ${sprintMed}
-• Сложный (до 500): ${sprintHard}
-• Тайм-атака (60 сек): ${records.data.timeAttack || 0} примеров
-
-${sessionTimingSection}
-
-[ТЕКУЩИЙ КАРАНТИН ОШИБОК И СЛАБЫХ МЕСТ (${quarantineItems.length})]:
-${quarantineSection}
-
-==============================================
-📋 ТЕХНИЧЕСКОЕ ЗАДАНИЕ ДЛЯ НЕЙРОСЕТИ (AI BRIEF)
-Роль: Элитный методист по ментальной арифметике и спортивной мнемотехнике.
-Цель: Проанализировать накопленный массив сессий и ошибок, разработать стратегию ликвидации задержек и создать целевую программу тренировок с мнемоническими сюжетами.
-
-[ОБЯЗАТЕЛЬНЫЙ ФОРМАТ ОТВЕТА НЕЙРОСЕТИ]:
-1. КОГНИТИВНЫЙ ДИАГНОЗ:
-   • 3-4 ключевых вывода о причинах задержек (разрядные барьеры, слепые зоны таблицы умножения, стресс времени).
-
-2. БЛОК МНЕМОНИКИ (ОБРАЗЫ И МИНИ-ИСТОРИИ):
-   • Для каждого проблемного примера (например 7×8, 6×7, 8×9 или вычитания через десяток) придумай яркий образ или смешную абсурдную мнемоническую мини-историю / рифму, чтобы результат врезался в память без перебора в уме!
-
-3. ПЕРСОНАЛЬНЫЙ ТРЕНИРОВОЧНЫЙ КУРС (в одну строчку для загрузки в игру):
-   [КУРС]: пример1, пример2, пример3, пример4... (15-20 целевых примеров строго в формате: 7*8, 6*7, 48+35, 100-37)
-==============================================`;
-
-        return report;
+ЗАДАЧА ИИ-НАСТАВНИКУ:
+Дай осторожный педагогический анализ наблюдений, отделяя единичную задержку от устойчивых закономерностей. Для подтверждённых затруднений предложи математические стратегии и короткие понятные объяснения. Не ставь когнитивные диагнозы и не предлагай механическое повторение точных примеров: нужны разнообразные задания на один навык, с чередованием других навыков. Если статистики недостаточно, явно укажи это. При желании составь [КУРС]: 15 новых выражений в формате 53+47, 76-29, 11*12, 24/4.`;
       }
 
       function openAiReportModal() {
@@ -2082,16 +1906,6 @@ ${quarantineSection}
         downloadAiBriefFile();
       });
 
-      // Archive quarantine button
-      document.getElementById('btn-archive-quarantine-on-import').addEventListener('click', () => {
-        sounds.tap();
-        quarantine.clear();
-        renderQuarantineModal();
-        const btn = document.getElementById('btn-archive-quarantine-on-import');
-        btn.textContent = '✓ Карантин очищен';
-        setTimeout(() => { btn.textContent = '📦 Очистить карантин'; }, 2000);
-      });
-
       // Smart Parser for AI response (extracts mnemonics & problem packs)
       document.getElementById('btn-launch-ai-pack').addEventListener('click', () => {
         const inputVal = document.getElementById('input-ai-custom-pack').value.trim();
@@ -2103,7 +1917,7 @@ ${quarantineSection}
         const lines = inputVal.split('\n');
         const foundMnemonics = lines.filter(l => l.match(/(мнемо|образ|сюжет|истори|рифм|запомн)/i) && l.length > 15);
         if (foundMnemonics.length > 0) {
-          mnemonicTextEl.innerHTML = foundMnemonics.slice(0, 4).map(m => `<div>• ${m.replace(/^[-*•]\s*/, '')}</div>`).join('');
+          mnemonicTextEl.textContent = foundMnemonics.slice(0, 4).map(m => '• ' + m.replace(/^[-*•]\s*/, '')).join('\n');
           mnemonicPreview.classList.remove('hidden');
         }
 
@@ -2130,6 +1944,7 @@ ${quarantineSection}
               ans = Math.floor(n1 / n2);
             }
 
+            if (!Number.isSafeInteger(ans) || ans < 0 || (symbol === '÷' && (n2 === 0 || n1 % n2 !== 0))) return;
             parsedQueue.push({ n1, symbol, n2, answer: ans, id: `ai_${n1}_${symbol}_${n2}` });
           }
         });
@@ -2144,80 +1959,35 @@ ${quarantineSection}
         }
       });
 
-      // --- QUARANTINE MANAGER MODAL ---
-      function renderQuarantineModal() {
-        const listEl = document.getElementById('quarantine-list');
-        const countEl = document.getElementById('quarantine-modal-count');
-        const items = quarantine.items;
-
-        countEl.textContent = `${items.length} ${items.length === 1 ? 'пример' : (items.length > 4 ? 'примеров' : 'примера')}`;
-
-        if (items.length === 0) {
-          listEl.innerHTML = `
-            <div class="p-6 text-center text-slate-500 flex flex-col items-center justify-center">
-              <span class="text-4xl mb-2">🎉</span>
-              <div class="font-bold text-slate-400">Карантин чист!</div>
-              <p class="text-[11px] text-slate-500 mt-1">Ошибок нет. Играйте в Спринт или Обучение — любые трудности и зависания попадут сюда автоматически.</p>
-            </div>
-          `;
+      // --- MATHEMATICAL SKILL MAP ---
+      function renderSkillsModal() {
+        const summary = adaptive.getReport(selectedDiff, selectedOps);
+        const skillList = document.getElementById('skills-list');
+        const label = { easy: 'Лёгкий', medium: 'Средний', hard: 'Сложный' }[selectedDiff];
+        document.getElementById('skills-level').textContent = label;
+        document.getElementById('skills-samples').textContent = `${summary.total} наблюдений`;
+        if (!summary.studied.length) {
+          skillList.innerHTML = `<div class="text-center rounded-2xl bg-slate-950/70 border border-slate-800 p-6">
+            <div class="text-3xl mb-2">🌱</div><div class="font-bold text-slate-200">Карта только начинает формироваться</div>
+            <p class="text-slate-400 mt-1 leading-relaxed">Решайте разнообразные примеры. После нескольких сессий игра увидит устойчивые закономерности.</p></div>`;
           return;
         }
-
-        listEl.innerHTML = items.map(item => `
-          <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-2xl flex flex-col space-y-1.5 hover:border-slate-700/80 transition">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2 font-mono flex-wrap">
-                <span class="text-base font-black text-white">${item.n1} ${item.symbol} ${item.n2} = <span class="text-emerald-400 font-bold">${item.answer}</span></span>
-                ${item.lastTimeSec ? `<span class="text-[10px] text-amber-300 bg-amber-950/40 px-1.5 py-0.5 rounded border border-amber-900/40">⏱️ ${item.lastTimeSec}с</span>` : ''}
-                <span class="text-[10px] text-rose-400 bg-rose-950/40 px-1.5 py-0.5 rounded border border-rose-900/40">${item.lastUserAns !== undefined ? 'был ответ: ' + item.lastUserAns : item.reason}</span>
-              </div>
-              <button data-remove-id="${item.id}" class="btn-remove-quarantine text-slate-500 hover:text-rose-400 p-1" title="Удалить из карантина">✕</button>
-            </div>
-            <div class="text-[11px] text-indigo-300/90 leading-snug bg-indigo-950/20 p-2 rounded-xl border border-indigo-900/30">
-              <strong class="text-amber-300 font-medium">💡 Лайфхак:</strong> ${item.trickText}
-            </div>
-          </div>
-        `).join('');
-
-        document.querySelectorAll('.btn-remove-quarantine').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const id = btn.getAttribute('data-remove-id');
-            quarantine.remove(id);
-            renderQuarantineModal();
-            sounds.tap();
-          });
-        });
+        const rank = x => x.needsWork ? 0 : !x.reliable ? 1 : 2;
+        skillList.innerHTML = summary.studied.sort((a,b) => rank(a)-rank(b) || b.count-a.count).map(x => {
+          const state = x.needsWork ? 'Нужна практика' : x.reliable ? 'Наблюдения стабильны' : 'Изучаем';
+          const tone = x.needsWork ? 'text-amber-300' : x.reliable ? 'text-emerald-300' : 'text-indigo-300';
+          return `<div class="rounded-2xl bg-slate-950/70 border border-slate-800 p-3">
+            <div class="flex justify-between items-start gap-2"><span class="font-bold text-slate-100 text-xs">${x.name}</span><span class="text-[10px] ${tone} whitespace-nowrap">${state}</span></div>
+            <div class="flex flex-wrap gap-3 text-[11px] text-slate-400 mt-2"><span>Примеров: ${x.count}</span><span>Точность: ${x.accuracy}%</span><span>${x.medianSec === null ? 'Скорость: —' : 'Медиана: ' + x.medianSec.toFixed(1) + 'с'}</span></div>
+            ${x.needsWork ? `<p class="text-indigo-200/90 leading-relaxed mt-2 pt-2 border-t border-slate-800">💡 ${x.tip}</p>` : ''}
+          </div>`;
+        }).join('');
       }
-
-      document.getElementById('btn-quarantine').addEventListener('click', () => {
-        sounds.tap();
-        renderQuarantineModal();
-        modalQuarantine.classList.remove('hidden');
+      document.getElementById('btn-skills').addEventListener('click', () => {
+        sounds.tap(); renderSkillsModal(); modalSkills.classList.remove('hidden');
       });
-
-      document.getElementById('btn-close-quarantine').addEventListener('click', () => modalQuarantine.classList.add('hidden'));
-      document.getElementById('btn-done-quarantine').addEventListener('click', () => modalQuarantine.classList.add('hidden'));
-
-      document.getElementById('btn-clear-quarantine').addEventListener('click', () => {
-        quarantine.clear();
-        renderQuarantineModal();
-        sounds.tap();
-      });
-
-      document.getElementById('btn-train-quarantine').addEventListener('click', () => {
-        if (quarantine.items.length === 0) return;
-        modalQuarantine.classList.add('hidden');
-        startGame('quarantine_train');
-      });
-
-      document.getElementById('btn-train-quarantine-quick').addEventListener('click', () => {
-        if (quarantine.items.length === 0) {
-          renderQuarantineModal();
-          modalQuarantine.classList.remove('hidden');
-          return;
-        }
-        startGame('quarantine_train');
-      });
+      document.getElementById('btn-close-skills').addEventListener('click', () => modalSkills.classList.add('hidden'));
+      document.getElementById('btn-done-skills').addEventListener('click', () => modalSkills.classList.add('hidden'));
 
       // --- END OF ROUND ---
       function endGame() {
@@ -2250,9 +2020,6 @@ ${quarantineSection}
         } else if (selectedMode === 'learn') {
           document.getElementById('res-time').textContent = formatMs(elapsedMs);
           document.getElementById('res-mode').textContent = 'Обучение с разбором';
-        } else if (selectedMode === 'quarantine_train') {
-          document.getElementById('res-time').textContent = formatMs(elapsedMs);
-          document.getElementById('res-mode').textContent = 'Отработка карантина';
         } else if (selectedMode === 'ai_pack') {
           document.getElementById('res-time').textContent = formatMs(elapsedMs);
           document.getElementById('res-mode').textContent = 'Пак от ИИ';
@@ -2275,6 +2042,19 @@ ${quarantineSection}
         document.getElementById('res-solved').textContent = `${solvedCount} / ${totalAttempts}`;
         document.getElementById('res-accuracy').textContent = `${accuracy}%`;
         document.getElementById('res-combo').textContent = `🔥 x${maxComboInRound}`;
+        updateSkillsBadge();
+        const training = adaptive.getReport(selectedDiff, selectedOps);
+        const insightEl = document.getElementById('res-skill-insight');
+        const focus = training.focus[0];
+        if (isGuestMode) {
+          insightEl.textContent = '🎭 Гостевой режим: карта навыков не изменена.';
+        } else if (focus) {
+          insightEl.innerHTML = `<div class="font-bold text-amber-300 mb-1">🧠 На что обратить внимание: ${focus.name}</div><p class="mb-1">По нескольким сессиям заметны повторяющиеся затруднения. В «Обучении» появятся новые примеры на этот навык.</p><p class="text-indigo-200">💡 ${focus.tip}</p>`;
+        } else if (training.total < 20) {
+          insightEl.textContent = `🧠 Карта навыков формируется: ${training.total} наблюдений на этой сложности. Пока задания остаются разнообразными.`;
+        } else {
+          insightEl.textContent = '🧠 Выраженных слабых закономерностей пока не выявлено. Продолжайте разнообразную практику — адаптация включится при устойчивых затруднениях.';
+        }
 
         // --- RENDER LATENCY & SPEED ANALYSIS IN MODAL ---
         const totalSessionMs = currentSessionProblems.reduce((sum, p) => sum + p.timeMs, 0);
@@ -2334,23 +2114,6 @@ ${quarantineSection}
             `;
           }).join('');
         }
-
-        // Setup add slow problems to quarantine button
-        const addSlowBtn = document.getElementById('btn-add-slow-to-quarantine');
-        addSlowBtn.onclick = () => {
-          sounds.tap();
-          let addedCount = 0;
-          sortedSlow.forEach(p => {
-            quarantine.add(p, p.userAns, p.timeSec, 'зависание');
-            addedCount++;
-          });
-          addSlowBtn.textContent = `✓ Добавлено ${addedCount} медленных примеров в Карантин!`;
-          addSlowBtn.className = 'w-full py-2 bg-emerald-950/40 border border-emerald-900/50 text-emerald-300 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition';
-          setTimeout(() => {
-            addSlowBtn.textContent = '🛡️ Отправить зависшие примеры в Карантин';
-            addSlowBtn.className = 'w-full py-2 bg-rose-950/30 hover:bg-rose-950/50 border border-rose-900/40 text-rose-300 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition';
-          }, 2500);
-        };
 
         const titleEl = document.getElementById('result-title');
         const iconEl = document.getElementById('result-icon');
@@ -2460,7 +2223,7 @@ ${quarantineSection}
           if (e.key === 'Escape') {
             modalResults.classList.add('hidden');
             modalRecords.classList.add('hidden');
-            modalQuarantine.classList.add('hidden');
+            modalSkills.classList.add('hidden');
             modalAiReport.classList.add('hidden');
           }
           return;
